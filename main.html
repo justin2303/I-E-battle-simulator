@@ -1,0 +1,166 @@
+<!-- index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>I&E Battle Sim</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <h2>Battle Simulator</h2>
+ <!--army 1 is always attacker, army2 is always defence-->
+  <div>
+    <table class="army-modifiers">
+      <tr>
+          <td><img src="img_files/dice_roll.png"></td>
+          <td><img src="img_files/bicorne.png"></td>
+          <td><img src="img_files/mountains.png"></td>
+          <td><img src="img_files/shovel.png"></td>
+          <td><img src="img_files/tactics.png"></td>
+      </tr>
+      <tr>
+        <td><input class="arm_mods" type="text" id="roll1" placeholder="-1"></td>
+        <td><input class="arm_mods" type="text" id="gen_qual1" placeholder="0"></td>
+        <td><input class="arm_mods" type="text" id="ter_mod" placeholder=0></td>
+        <td><input class="arm_mods" type="text" id="ent_mod" placeholder=0></td>
+        <td><input class="arm_mods" type="text" id="tact1" placeholder=0></td>
+      </tr>
+  </table>
+  </div>
+  <div class="grid-container" ondrop="drop(event)" ondragover="allowDrop(event)">
+    <!--div container for the combat grid -->
+  </div>
+    <div>
+      <table class="army-modifiers">
+        <tr>
+            <td><img src="img_files/fort.png"></td>
+            <td><img src="img_files/dice_roll.png"></td>
+            <td><img src="img_files/bicorne.png"></td>
+            <td><img src="img_files/tactics.png"></td>
+        </tr>
+        <tr>
+          <td><input class="arm_mods" type="text" id="fort_lev" placeholder=0></td>
+          <td><input class="arm_mods" type="text" id="roll2" placeholder=-1></td>
+          <td><input class="arm_mods" type="text" id="gen_qual2" placeholder=0></td>
+          <td><input class="arm_mods" type="text" id="tact2" placeholder=0></td>
+        </tr>
+    </table>
+    </div>
+
+  <div>
+    <button onclick="fight()">fight</button>
+  </div>
+
+  <div id="container-input">
+    <label for="num-containers">Combat Width</label>
+    <input type="number" id="num-containers" min="1" value="5">
+    <button onclick="updateContainers()">Update</button>
+  </div>
+
+  
+  
+  <!--
+  <div class="labels-container">
+    <div class="draggable-label" draggable="true" ondragstart="drag(event)">X</div>
+    <div class="draggable-label" draggable="true" ondragstart="drag(event)">/</div>
+    <div class="draggable-label" draggable="true" ondragstart="drag(event)">.</div>
+    <div class="draggable-label" draggable="true" ondragstart="drag(event)">=</div>
+  </div>
+  -->
+  <!--the commented shit is a drag menu feature which is scrapped, but hte syntax is useful.-->
+  <div>
+    <button class="button unit-type" style="background-image: url('img_files/Cuirassier.png');" onclick="toggleButton(this, 3)" id="grc"></button>
+    <button class="button unit-type" style="background-image: url('img_files/Hussar.png');" onclick="toggleButton(this, 2)" id="cav"></button>
+    <button class="button unit-type" style="background-image: url('img_files/Infantry.png');" onclick="toggleButton(this, 0)" id="inf"></button>
+    <button class="button unit-type" style="background-image: url('img_files/Guard.png');" onclick="toggleButton(this, 1)" id="grd"></button>
+    <button class="button unit-type" style="background-image: url('img_files/Engineer.png');" onclick="toggleButton(this, 5)" id="eng"></button>
+    <button class="button unit-type" style="background-image: url('img_files/arty.png');" onclick="toggleButton(this, 4)" id="art"></button>
+  </div>
+<div class="stats-container">
+  <table border="1">
+    <tbody>
+      <tr>
+        <td>Name</td>
+        <td><input type="text" id="Unit_name" placeholder=""></td>
+      </tr>
+      <tr>
+        <td>Attack</td>
+        <td><input type="text" id="Unit_attack" placeholder=""></td>
+      </tr>
+      <tr>
+        <td>Defence</td>
+        <td><input type="text" id="Unit_defence" placeholder=""></td>
+      </tr>
+      <tr>
+        <td>Support</td>
+        <td><input type="text" id="Unit_sup" placeholder=""></td>
+      </tr>
+      <tr>
+        <td>Maneuver</td>
+        <td><input type="text" id="Unit_man" placeholder=""></td>
+      </tr>
+      <tr>
+        <td>Strength</td>
+        <td><input type="text" id="Unit_str" placeholder=""></td>
+      </tr>
+      <tr>
+        <td>Organisation</td>
+        <td><input type="text" id="Unit_org" placeholder=""></td>
+      </tr>
+      <tr>
+        <td>Discipline</td>
+        <td><input type="text" id="Unit_dis" placeholder=""></td>
+      </tr>
+      <tr>
+        <td>Experience</td>
+        <td><input type="text" id="Unit_exp" placeholder=""></td>
+      </tr>
+    </tbody>
+  </table>
+  <div id="display_stat"></div>
+</div>
+
+
+
+  <div class="army-container-wrapper">
+    <div class="army1-container">
+      <div>
+        <h2>Army 1 Units:</h2>
+        <h3>Deployed:</h3>
+        <div class="deploy-Container" id="army1_dep"></div>
+        <h3>Reserves:</h3>
+        <div class="reserve-Container" id="army1_res"></div>
+      <button onclick="addreserves(1)">Add Unit</button>
+      <br><br>
+      <button onclick="deploy(1)"> Deploy Unit</button>  
+      <h3>Reserves:</h3>
+      <div class="retreat-Container" id="army1_ret"></div>
+    </div>
+    </div>
+  
+    <!-- New div to be rendered to the right -->
+    <div class="army2-container">
+      <div>
+        <h2>Army 2 Units:</h2>
+        <h3>Deployed:</h3>
+        <div class="deploy-Container" id="army2_dep"></div>
+        <h3>Reserves:</h3>
+        <div class="reserve-Container" id="army2_res"></div>
+      <button onclick="addreserves(2)">Add Unit</button>
+      <br><br>
+      <button onclick="deploy(2)"> Deploy Unit</button> 
+      <h3>Reserves:</h3>
+      <div class="retreat-Container" id="army2_ret"></div>
+    </div>
+    </div>
+    </div>
+  <script src="merge_sort.js"></script>
+  <script src="unit_class.js"></script>
+  <script src="units.js"></script>
+  <script src="combat_map.js"></script>
+  <script src="battle.js"></script>
+</body>
+</html>

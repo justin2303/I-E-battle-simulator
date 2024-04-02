@@ -1,0 +1,198 @@
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+.grid-container {
+  display: block;
+  flex-wrap: wrap;
+}
+
+.row-container {
+  display: flex;
+  margin-right: 1px; /* Adjust as needed */
+}
+
+.empty-space {
+  width: 25px;
+  height: 25px;
+  border: 1px solid #ccc;
+  text-align: center;
+  line-height: 25px;
+  margin-right: 1px; /* Adjust as needed */
+}
+
+.labels-container {
+  display: flex;
+  margin-top: 25px;
+}
+
+.draggable-label {
+  width: 25px;
+  height: 25px;
+  border: 1px solid #ccc;
+  text-align: center;
+  line-height: 25px;
+  margin-right: 10px;
+  cursor: move;
+}
+
+.frontline {
+  width: 27px;
+  height: 3px; /* Adjust the height to control the thickness of the line */
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background-color: black; /* Adjust the color as needed */
+}
+.army-container-wrapper {
+  display: flex;
+  position: fixed;
+  top: 0;
+  right: 0;
+  /* Add padding or adjust as needed */
+}
+
+.army1-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-end;
+  padding: 20px;
+}
+
+.army2-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-end;
+  padding: 20px;
+}
+#addedUnitContainer {
+  margin-top: 1px; /* Adjust margin as needed for spacing */
+}
+
+.reserve-Container{
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap to the next line */
+  max-width: 150px;
+  margin-right: 5px; 
+}
+
+.deploy-Container{
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap to the next line */
+  max-width: 150px;
+  margin-right: 5px; 
+}
+
+.button.unit-type {
+  width: 36px;
+  height: 36px;
+  background-size: cover; /* Adjust to 'contain' if needed */
+  background-repeat: no-repeat;
+  border: none; /* Remove default button border */
+  cursor: pointer; /* Add pointer cursor for better usability */
+  /* Add any additional styling as needed */
+}
+
+.button.unit-type.active {
+  border: 4px solid yellow; /* Yellow border for active/toggled state */
+}
+.button.reserve{
+  width: 25px;
+  height: 25px;
+  background-size: cover; /* Adjust to 'contain' if needed */
+  background-repeat: no-repeat;
+  background-color: blue;
+  margin: 3px;
+  border: 2px solid black; /* Remove default button border */
+  cursor: pointer; /* Add pointer cursor for better usability */
+}
+
+.button.reserve.selected{
+  border: 2px solid yellow; /* Yellow border for active/toggled state */
+}
+
+/* Define styles for the short_table class */
+.short_table {
+  margin-top: 30px;
+  max-width: 150px;
+  background-color: chartreuse;
+  font-size: small;
+
+}
+
+.short_table td, .short_table th {
+  border: 1px solid black;
+}
+
+.button.combat_grid{
+  width: 25px;
+  height: 25px;
+  border: 1px solid black;
+  margin-right: 2px;
+  margin-bottom: 2px; 
+  cursor: pointer;
+}
+.button.combat_grid.pressed{
+  border: 4px solid yellow; /* Yellow border for active/toggled state */
+}
+.button.combat_grid.empty {
+  background-color: white; /* Set background color for empty state */
+}
+.button.combat_grid.deployed {
+  cursor: grab;
+  user-select: none;
+  /* Add any other styling you want for the deployed combat grid button */
+}
+.button.combat_grid.def{
+  border: 5px solid blue;
+}
+.button.combat_grid.att{
+  border: 5px solid red; 
+}
+
+.button.deployment{
+  width: 25px;
+  height: 25px;
+  background-size: cover; /* Adjust to 'contain' if needed */
+  background-repeat: no-repeat;
+  margin: 3px;
+  border: 2px solid black; /* Remove default button border */
+}
+
+.army-modifiers {
+  border-collapse: collapse;
+}
+
+.arm_mods{
+  max-width: 30px;
+  margin-right: 5px;
+}
+.stats-container{
+  display: flex;
+}
+.stats-container table {
+  border-collapse: collapse;
+  margin: 2px;
+}
+
+.stats-container td {
+  border: 1px solid #000;
+  padding: 5px;
+}
+.retreat-Container{
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap to the next line */
+  max-width: 150px;
+  margin-right: 5px; 
+  background-color: grey;
+}
+.button.retreated{
+  width: 25px;
+  height: 25px;
+  background-size: cover; /* Adjust to 'contain' if needed */
+  background-repeat: no-repeat;
+  margin: 3px;
+  border: 2px solid grey; /* Remove default button border */
+}
