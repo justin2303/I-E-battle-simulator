@@ -294,14 +294,12 @@ function display_retreat(army_num){
   let which_army;
   if(army_num==1){
     armyDeployContainer = document.getElementById('army1_ret');
-      color='grey';
       which_army=army1_retreated;
   // Clear the container before updating
   armyDeployContainer.innerHTML = '';
   }
   else{
     armyDeployContainer = document.getElementById('army2_ret');
-      color='black';
       which_army=army2_retreated;
   // Clear the container before updating
   armyDeployContainer.innerHTML = '';
@@ -313,7 +311,6 @@ function display_retreat(army_num){
     const deployButton = document.createElement('button');
     deployButton.className = 'button deployment';
     deployButton.style.borderRadius = '10%';
-    deployButton.style.backgroundColor = color;
     deployButton.id = (army1_deployed.length)*(army_num-1) + i;
     deployButton.onclick = function () {
       toggleReserves(deployButton, unit);
