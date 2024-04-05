@@ -99,6 +99,9 @@ for(let i=0; i<army2_deployed.length; i++){//army 2 attack!
       }
     }//find min key
       let indexes = distance_map.get(lowestKey);
+      if(!indexes){
+        break;
+      }
       for(let x=0; x<indexes.length;x++){// go thru all possible targets in lowest key, and choose the most vulnerable
           if (army1_deployed[indexes[x]].unittype == 'art') {
             targ_index = indexes[x];
@@ -124,10 +127,9 @@ for(let i=0; i<army2_deployed.length; i++){//army 2 attack!
       await sleep(1000);
       def_btn.classList.toggle('def');
       att_btn.classList.toggle('att');
-      //if at .2 org 25% chance retreat
+      army_retreat(1); //retreat the units in army1 if they need retreating.
 }//army 2 has finished their turn.
 
-army_retreat(1); //retreat the units in army1 if they need retreating.
 
 for(let i=0; i<army1_deployed.length; i++){//army1 attack
     let Stat;
@@ -178,6 +180,9 @@ for(let i=0; i<army1_deployed.length; i++){//army1 attack
       }
     }//find min key
       let indexes = distance_map.get(lowestKey);
+      if(!indexes){
+        break;
+      }
       for(let x=0; x<indexes.length;x++){// go thru all possible targets in lowest key, and choose the most vulnerable
           if (army2_deployed[indexes[x]].unittype == 'art') {
             targ_index = indexes[x];
@@ -204,8 +209,8 @@ for(let i=0; i<army1_deployed.length; i++){//army1 attack
       def_btn.classList.toggle('def');
       att_btn.classList.toggle('att');
       //if at .2 org 25% chance retreat
+      army_retreat(2); //retreat the units in army1 if they need retreating.
 }
-army_retreat(2); //retreat the units in army1 if they need retreating.
 }
 
 function sleep(ms) {
@@ -223,9 +228,31 @@ function army_retreat(num){
   }
   for(let x=0; x<which_army.length; x++){
     if(which_army[x].organization<=0){
-      which_army.splice(x, 1)[0];
-      updataDeployment(num);
+      let to_ret=which_army.splice(x, 1)[0];
       x--;
+      updataDeployment(num);
+      if(num==1){
+        army1_deployed=which_army;
+        display_retreat(1);
+      }
+      else{
+        army2_deployed=which_army;
+        display_retreat(2);
+      }
+      updateArmies(num);
+      let id = CSS.escape(to_ret.coord); 
+      
+      // Find the button element with the specified ID
+      let button = document.querySelector(`#${id}.button.combat_grid`);
+      
+      // If the button is found, update its class and style
+      if (button) {
+          button.classList.remove("deployed"); // Remove the 'deployed' class
+          button.classList.add("empty"); // Add the 'empty' class
+          button.style.backgroundColor = "white"; // Set background color to white
+          button.style.backgroundImage = 'none';
+      }
+      
     }//unit deleted
     else if(which_army[x].organization<=0.3){
       let randomInt = Math.floor(Math.random() * 3);
@@ -235,9 +262,13 @@ function army_retreat(num){
         updataDeployment(num);
         if(num==1){
           army1_retreated.push(to_ret);
+          army1_deployed=which_army;
+          display_retreat(1);
         }
         else{
           army2_retreated.push(to_ret);
+          army2_deployed=which_army;
+          display_retreat(2);
         }
         updateArmies(num);
         let id = CSS.escape(to_ret.coord); 
@@ -256,6 +287,68 @@ function army_retreat(num){
     }//33% chance unit retreats
 
   }
+}
+function display_retreat(army_num){
+  let color;
+  let armyDeployContainer;
+  let which_army;
+  if(army_num==1){
+    armyDeployContainer = document.getElementById('army1_ret');
+      color='grey';
+      which_army=army1_retreated;
+  // Clear the container before updating
+  armyDeployContainer.innerHTML = '';
+  }
+  else{
+    armyDeployContainer = document.getElementById('army2_ret');
+      color='black';
+      which_army=army2_retreated;
+  // Clear the container before updating
+  armyDeployContainer.innerHTML = '';
+  }
+  
+  for (let i = 0; i < which_army.length; i++) {
+    const unit = which_army[i];
+    console.log("tring to print Unit type:", unit.unittype);
+    const deployButton = document.createElement('button');
+    deployButton.className = 'button deployment';
+    deployButton.style.borderRadius = '10%';
+    deployButton.style.backgroundColor = color;
+    deployButton.id = (army1_deployed.length)*(army_num-1) + i;
+    deployButton.onclick = function () {
+      toggleReserves(deployButton, unit);
+  };
+    if (unit.unittype === "inf") {
+      console.log("infantry");
+      deployButton.style.backgroundImage = 'url("img_files/classic_inf.png")';
+    }
+    else if (unit.unittype === "grd") {
+      console.log("guard");
+      deployButton.style.backgroundImage = 'url("img_files/classic_grd.png")';
+    }
+    else if (unit.unittype === "cav") {
+      console.log("cavalry");
+      deployButton.style.backgroundImage = 'url("img_files/classic_cav.png")';
+    }
+    else if (unit.unittype === "art") {
+      console.log("artillery");
+      deployButton.style.backgroundImage = 'url("img_files/classic_arty.png")';
+    }
+    else if (unit.unittype === "eng") {
+      console.log("engineer");
+      deployButton.style.backgroundImage = 'url("img_files/classic_eng.png")'; 
+    }
+    else if (unit.unittype === "grc") {
+      console.log("g cav");
+      deployButton.style.backgroundImage = 'url("img_files/classic_gcav.png")';
+    }
+    else{//panic
+      console.log("WHAT THE HELL?");
+      return;
+    }
+    armyDeployContainer.appendChild(deployButton);
+  }
+  
 }
 
 function battle_delay() {
