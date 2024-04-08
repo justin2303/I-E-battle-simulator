@@ -2,19 +2,22 @@ army1_retreated = [];
 army2_retreated = [];
 async function fight(){
     //get all the stats
-    let roll1_army=document.getElementById('roll1').value;
-    if( roll1_army == ''){
+    let roll1_armyIN=document.getElementById('roll1').value;
+    let roll1_army = parseFloat(roll1_armyIN);
+    if( roll1_armyIN == ''){
         //Math.random is between 0 and 1
         roll1_army = Math.floor(Math.random()*10);
         console.log(roll1_army);
     }
-    let gen1=document.getElementById('gen_qual1').value;
-    if( gen1 == ''){
+    let gen1IN=document.getElementById('gen_qual1').value;
+    let gen1 = parseFloat(gen1IN);
+    if( gen1IN == ''){
         gen1 = 0
         console.log(gen1);
     }
-    let terrain = document.getElementById('ter_mod').value;
-    if( terrain == ''){
+    let terrainIN = document.getElementById('ter_mod').value;
+    let terrain = parseFloat(terrainIN);
+    if( terrainIN == ''){
         terrain = 0
         console.log(terrain);
     }
@@ -23,29 +26,35 @@ async function fight(){
         entrench = 0
         console.log(entrench);
     }
-    let tact1 = document.getElementById('tact1').value;
-    if( tact1 == ''){
+    let tact1IN = document.getElementById('tact1').value;
+    let tact1 = parseFloat(tact1IN)
+    if( tact1IN == ''){
         tact1 = 0
         console.log(tact1);
     }
-    let fort = document.getElementById('fort_lev').value;
-    if( fort == ''){
+    let fortIN = document.getElementById('fort_lev').value;
+    let fort = parseFloat(fortIN);
+    if( fortIN == ''){
         fort = 0
         console.log(fort);
     }
     //army1 modifiers
-    let  roll2_army =document.getElementById('roll2').value;
-    if( roll2_army == ''){
+    let  roll2_army_in =document.getElementById('roll2').value;
+    let roll2_army = parseFloat(roll2_army_in);
+    if( roll2_army_in == ''){
         roll2_army = Math.floor(Math.random()*10);
         console.log(roll2_army);
     }
-    let gen2 =document.getElementById('gen_qual2').value;
-    if( gen2 == ''){
+    let gen2Input =document.getElementById('gen_qual2').value;
+    let gen2 = parseFloat(gen2Input);
+  
+    if( gen2Input == ''){
         gen2 = 0;
         console.log(gen2);
     }
-    let tact2  = document.getElementById('tact2').value;
-    if( tact2 == ''){
+    let tact2Input = document.getElementById('tact2').value;
+    let tact2 = parseFloat(tact2Input);
+    if( tact2Input == ''){
         tact2 = 0;
         console.log(tact2);
     }
@@ -55,13 +64,19 @@ for(let i=0; i<army2_deployed.length; i++){//army 2 attack!
     let damage;
     let deorg;
     let total_roll = roll2_army + gen2;
-    let Roll_Multiplier = (total_roll / 5 +0.2);
+    let Roll_Multiplier= total_roll;
+    if (total_roll == 0){
+      Roll_Multiplier = 1;
+    }
     let num_def = army2_deployed[i].strength;
-    Stat = army2_deployed[i].defence;
-    console.log(num_def);
+    Stat =parseFloat(army2_deployed[i].defence);
+    console.log("defence Stat:", Stat);
+    console.log(Roll_Multiplier);
+    console.log("roll_stat:", roll2_army, gen2, 10+Stat, 1.5+tact1)
     if(army2_deployed[i].coord<total_Cwidth*3){//frontline calculations
         console.log("frontline");
-        damage = num_def * (10+Stat)*Roll_Multiplier/(2500*(1.5+tact1));   
+        damage = num_def/50 * (1+Stat/5)*Roll_Multiplier/(1+tact1/10);
+        console.log("fresh dmg:", damage);   
     }
     else{//backline calculations
         console.log("backline");
@@ -124,7 +139,8 @@ for(let i=0; i<army2_deployed.length; i++){//army 2 attack!
       console.log("type is: ", army1_deployed[targ_index].unittype);
       console.log("org is: ", army1_deployed[targ_index].organization);
       console.log("strength: ", army1_deployed[targ_index].strength);
-      await sleep(1000);
+      console.log("damage: ", damage);
+      await sleep(500);
       def_btn.classList.toggle('def');
       att_btn.classList.toggle('att');
       army_retreat(1); //retreat the units in army1 if they need retreating.
@@ -135,13 +151,19 @@ for(let i=0; i<army1_deployed.length; i++){//army1 attack
     let Stat;
     let damage;
     let deorg;
-    let total_roll = roll1_army-fort+gen1-terrain-entrench; 
-    let Roll_Multiplier = (total_roll / 5 +0.2);
+    let total_roll = roll1_army-fort+gen1-terrain-entrench;
+    let Roll_Multiplier=total_roll;
+    if (total_roll == 0){
+      Roll_Multiplier = 1;
+    }
+    console.log("army1 rollmult:", Roll_Multiplier); 
     let num_att = army1_deployed[i].strength;
-    Stat = army1_deployed[i].attack;
+    Stat =parseFloat(army1_deployed[i].attack);
+    console.log("attack Stat:", Stat);
     if(army1_deployed[i].coord>=total_Cwidth){//frontline calculations
         console.log("frontline");
-        damage = num_att * (10+Stat)*Roll_Multiplier/(2500*(1.5+tact2));   
+        damage = num_att/50 * (1+Stat/5)*Roll_Multiplier/(1+tact2/10); 
+        console.log("fresh dmg,", damage);  
     }
     else{//backline calculations
         console.log("backline");
@@ -205,7 +227,7 @@ for(let i=0; i<army1_deployed.length; i++){//army1 attack
       console.log("type is: ", army2_deployed[targ_index].unittype);
       console.log("org is: ", army2_deployed[targ_index].organization);
       console.log("strength: ", army2_deployed[targ_index].strength);
-      await sleep(1000);
+      await sleep(500);
       def_btn.classList.toggle('def');
       att_btn.classList.toggle('att');
       //if at .2 org 25% chance retreat

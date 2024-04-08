@@ -61,7 +61,13 @@ total_Cwidth=0;
     move_button.onclick = function (){
       moveUnit();
     }
-    gridContainer.appendChild(move_button)
+    gridContainer.appendChild(move_button);
+    const delete_button = document.createElement('button');
+    delete_button.textContent="Delete Unit";
+    delete_button.onclick = function (){
+      deleteUnit();
+    }
+    gridContainer.appendChild(delete_button);
     }
     army1_deployed = [];
     army2_deployed = [];
@@ -345,6 +351,12 @@ function moveUnit(){
         break;
       } 
     }//found the unit
+    if(color=='blue'){
+      army1_deployed=which_army;
+    }
+    else{
+      army2_deployed=which_army;
+    }
     if (u_to_disp.unittype === "inf") {
       console.log("infantry");
       empty_grid.style.backgroundImage = 'url("img_files/classic_inf.png")';
@@ -378,4 +390,60 @@ function moveUnit(){
     
   }
 
+}
+
+function deleteUnit(){
+  let filled_grid;
+  document.querySelectorAll('.button.combat_grid').forEach(function(btn) {
+    if (btn.classList.contains('pressed') && btn.classList.contains('empty')) {
+      console.log('Pressed button:', btn.id);
+      btn.classList.remove('pressed');
+    }//should never have more than 1
+    else if (btn.classList.contains('pressed')){
+      console.log('Filled button:', btn.id);
+      filled_grid=btn;
+      btn.classList.remove('pressed');
+    }//should never have more than 1
+  });
+  let which_army;
+  let num=0;
+  if(filled_grid){
+    if(filled_grid.id<total_Cwidth*2){
+      which_army= army1_deployed;
+      num = 1;
+    }
+    else{
+      which_army = army2_deployed;
+      num = 2;
+    }
+    let pos;
+    for (let x=0; x<which_army.length; x++){
+      if (which_army[x].coord==filled_grid.id){
+        pos = x;
+        break;
+      }
+    }
+    let to_ret=which_army.splice(pos, 1)[0];
+    updataDeployment(num);
+    if(num==1){
+      army1_deployed=which_army;
+    }
+    else{
+      army2_deployed=which_army;
+    }
+    updateArmies(num);
+    let id = CSS.escape(to_ret.coord); 
+    
+    // Find the button element with the specified ID
+    let button = document.querySelector(`#${id}.button.combat_grid`);
+    
+    // If the button is found, update its class and style
+    if (button) {
+        button.classList.remove("deployed"); // Remove the 'deployed' class
+        button.classList.add("empty"); // Add the 'empty' class
+        button.style.backgroundColor = "white"; // Set background color to white
+        button.style.backgroundImage = 'none';
+    }
+    
+  }//unit deleted
 }
